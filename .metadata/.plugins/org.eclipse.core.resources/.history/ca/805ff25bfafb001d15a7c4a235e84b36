@@ -1,0 +1,67 @@
+/*12. Write a Java program that uses JDBC to implement a simple CRUD (create, read,
+update, delete) application. The program should allow users to add, view, update,
+and delete records in a MySQL database table.
+ * 
+ * 
+ * 
+ */
+
+
+
+
+package in.ineuron.test;
+
+
+
+import java.sql.*;
+
+public class CRUDApplication {
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/people";
+    private static final String USER = "root";
+    private static final String PASSWORD = "pune#123";
+
+    public static void main(String[] args) {
+        try {
+            // Connect to the database
+            Connection connection = DriverManager.getConnection(DB_URL, USER, PASSWORD);
+
+            // Create a statement
+            Statement statement = connection.createStatement();
+
+            // Create table if it doesn't exist
+            String createTableQuery = "CREATE TABLE IF NOT EXISTS employees (id INT PRIMARY KEY AUTO_INCREMENT, name VARCHAR(100), age INT)";
+            statement.executeUpdate(createTableQuery);
+
+            // Add a record
+            String insertQuery = "INSERT INTO employees (name, age) VALUES ('Nitin M', 30)";
+            statement.executeUpdate(insertQuery);
+
+            // View records
+            String selectQuery = "SELECT * FROM employees";
+            ResultSet resultSet = statement.executeQuery(selectQuery);
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String name = resultSet.getString("name");
+                int age = resultSet.getInt("age");
+                System.out.println("ID: " + id + ", Name: " + name + ", Age: " + age);
+            }
+
+            // Update a record
+            String updateQuery = "UPDATE employees SET age = 40 WHERE name = 'Nitin'";
+            statement.executeUpdate(updateQuery);
+
+            // Delete a record
+            String deleteQuery = "DELETE FROM employees WHERE name = 'John Manjunath'";
+            statement.executeUpdate(deleteQuery);
+
+            // Close resources
+            resultSet.close();
+            statement.close();
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+}
+

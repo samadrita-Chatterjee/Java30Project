@@ -1,0 +1,53 @@
+package in.ineuron.dao;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class BlogPostDao {
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/blog_db";
+    private static final String DB_USERNAME = "your_username";
+    private static final String DB_PASSWORD = "your_password";
+
+    public void createBlogPost(BlogPost blogPost) {
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD)) {
+            String query = "INSERT INTO blog_posts (title, description, content) VALUES (?, ?, ?)";
+
+            try (PreparedStatement stmt = conn.prepareStatement(query)) {
+                stmt.setString(1, blogPost.getTitle());
+                stmt.setString(2, blogPost.getDescription());
+                stmt.setString(3, blogPost.getContent());
+
+                stmt.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<BlogPost> getAllBlogPosts() {
+        List<BlogPost> blogPosts = new ArrayList<>();
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD)) {
+            String query = "SELECT * FROM blog_posts ORDER BY id DESC";
+
+            try (Statement stmt = conn.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+
+                while (rs.next()) {
+                    int id = rs.getInt("id");
+                    String title = rs.getString("title");
+                    String description = rs.getString("description");
+                    String content = rs.getString("content");
+
+                    BlogPost blogPost = new BlogPost(title, description, content);
+                    blogPosts.add(blogPost);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return blogPosts;
+    }
+}

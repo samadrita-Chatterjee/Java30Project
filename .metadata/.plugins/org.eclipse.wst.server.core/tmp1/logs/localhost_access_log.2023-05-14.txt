@@ -1,0 +1,13 @@
+127.0.0.1 - - [14/May/2023:18:01:02 +0530] "GET / HTTP/1.1" 404 751
+0:0:0:0:0:0:0:1 - - [14/May/2023:18:01:34 +0530] "GET /MaintainState16/servlet/com.demo.SessionServlet HTTP/1.1" 404 806
+0:0:0:0:0:0:0:1 - - [14/May/2023:18:02:29 +0530] "GET /MaintainState16/index.html HTTP/1.1" 200 305
+0:0:0:0:0:0:0:1 - - [14/May/2023:18:02:41 +0530] "POST /MaintainState16/session HTTP/1.1" 500 3387
+0:0:0:0:0:0:0:1 - - [14/May/2023:18:08:27 +0530] "POST /MaintainState16/session HTTP/1.1" 404 682
+0:0:0:0:0:0:0:1 - - [14/May/2023:18:11:32 +0530] "POST /MaintainState16/session HTTP/1.1" 404 682
+0:0:0:0:0:0:0:1 - - [14/May/2023:18:16:44 +0530] "GET /MaintainState16/servlet/com.demo.SessionServlet HTTP/1.1" 404 806
+0:0:0:0:0:0:0:1 - - [14/May/2023:18:17:13 +0530] "GET /MaintainState16/index.html HTTP/1.1" 200 226
+0:0:0:0:0:0:0:1 - - [14/May/2023:18:17:19 +0530] "POST /MaintainState16/session HTTP/1.1" 404 682
+127.0.0.1 - - [14/May/2023:18:18:27 +0530] "GET / HTTP/1.1" 404 751
+0:0:0:0:0:0:0:1 - - [14/May/2023:18:19:04 +0530] "GET /favicon.ico HTTP/1.1" 404 762
+0:0:0:0:0:0:0:1 - - [14/May/2023:18:19:46 +0530] "GET /MaintainState16/index.html HTTP/1.1" 304 -
+0:0:0:0:0:0:0:1 - - [14/May/2023:18:19:51 +0530] "POST /MaintainState16/session HTTP/1.1" 500 3387

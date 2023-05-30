@@ -1,0 +1,154 @@
+package in.ineuron.dao;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import in.ineron.model.User;
+
+public class UserDAO {
+	
+	private String jdbcURL ="jdbc:mysql://localhost:3306/people?useSSL=false";
+	private String jdbcUsername ="root";
+	private String jdbcPassword ="pune#123";
+	
+	private static final String INSERT_USERS_SQL = "INSERT INTO users" + "  (title,description,content) VALUES "
+			+ " (?,?, ?);";
+
+	private static final String SELECT_USER_BY_SINO = "select sino,title,description,content from users where sino =?";
+	private static final String SELECT_ALL_USERS = "select * from users";
+	private static final String DELETE_USERS_SQL = "delete from users where sino = ?;";
+	private static final String UPDATE_USERS_SQL = "update users set title = ?,description= ?, content =? where sino = ?;";
+	
+	protected Connection getConnection() {
+		Connection connection = null;
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			connection = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			
+			e.printStackTrace();
+		}
+		return connection;
+	}
+	//create or Insert user
+	public void insertUser(User user) throws SQLException {
+		System.out.println(INSERT_USERS_SQL);
+		// try-with-resource statement will auto close the connection.
+		try (Connection connection = getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement(INSERT_USERS_SQL)) {
+			preparedStatement.setString(1, user.getTitle());
+			preparedStatement.setString(2, user.getDescription());
+			preparedStatement.setString(3, user.getContent());
+			System.out.println(preparedStatement);
+			preparedStatement.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
+	//Select user by sino 
+	public User selectUser(int sino) {
+		User user = null;
+		// Step 1: Establishing a Connection
+		try (Connection connection = getConnection();
+				// Step 2:Create a statement using connection object
+				PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER_BY_SINO);) {
+			preparedStatement.setInt(1, sino);
+			System.out.println(preparedStatement);
+			// Step 3: Execute the query or update query
+			ResultSet rs = preparedStatement.executeQuery();
+
+			// Step 4: Process the ResultSet object.
+			while (rs.next()) {
+				String title = rs.getString("title");
+				String description = rs.getString("description");
+				String content = rs.getString("content");
+				user = new User(sino, title,description, content);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return user;
+	}
+	//Select All users
+	
+	public List<User> selectAllUsers() {
+
+		// using try-with-resources to avoid closing resources (boiler plate code)
+		List<User> users = new ArrayList<>();
+		// Step 1: Establishing a Connection
+		try (Connection connection = getConnection();
+
+				// Step 2:Create a statement using connection object
+			PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_USERS);) {
+			System.out.println(preparedStatement);
+			// Step 3: Execute the query or update query
+			ResultSet rs = preparedStatement.executeQuery();
+
+			// Step 4: Process the ResultSet object.
+			while (rs.next()) {
+				int sino= rs.getInt("sino");
+				String title = rs.getString("title");
+				String description = rs.getString("description");
+				String content = rs.getString("content");
+				
+				users.add(new User(sino, title,description, content));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return users;
+	}
+	
+	public boolean deleteUser(int sino) throws SQLException {
+		boolean rowDeleted;
+		try (Connection connection = getConnection();
+				PreparedStatement statement = connection.prepareStatement(DELETE_USERS_SQL);) {
+			statement.setInt(1, sino);
+			rowDeleted = statement.executeUpdate() > 0;
+		}
+		return rowDeleted;
+	}
+
+	public boolean updateUser(User user) throws SQLException {
+		boolean rowUpdated;
+		try (Connection connection = getConnection();
+				PreparedStatement statement = connection.prepareStatement(UPDATE_USERS_SQL);) {
+			statement.setString(1, user.getTitle());
+			statement.setString(2, user.getDescription());
+			statement.setString(3, user.getContent());
+			statement.setInt(4, user.getSino());
+
+			rowUpdated = statement.executeUpdate() > 0;
+		}
+		return rowUpdated;
+	}
+	
+	private void printSQLException(SQLException ex) {
+		for (Throwable e : ex) {
+			if (e instanceof SQLException) {
+				e.printStackTrace(System.err);
+				System.err.println("SQLState: " + ((SQLException) e).getSQLState());
+				System.err.println("Error Code: " + ((SQLException) e).getErrorCode());
+				System.err.println("Message: " + e.getMessage());
+				Throwable t = ex.getCause();
+				while (t != null) {
+					System.out.println("Cause: " + t);
+					t = t.getCause();
+				}
+			}
+		}
+	}
+
+
+}

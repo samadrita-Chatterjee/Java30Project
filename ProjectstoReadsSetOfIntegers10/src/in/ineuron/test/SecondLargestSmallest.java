@@ -1,0 +1,51 @@
+/*10. Write a Java program that reads a set of integers from the user and stores them in a
+List. The program should then find the second largest and second smallest elements
+in the List.
+ * 
+ */
+
+
+
+package in.ineuron.test;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Scanner;
+
+public class SecondLargestSmallest {
+    public static void main(String[] args) {
+        List<Integer> numbers = new ArrayList<>();
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter the number of elements: ");
+        int count = scanner.nextInt();
+
+        System.out.println("Enter the elements:");
+
+        for (int i = 0; i < count; i++) {
+            int num = scanner.nextInt();
+            numbers.add(num);
+        }
+
+        int secondLargest = findSecondLargest(numbers);
+        int secondSmallest = findSecondSmallest(numbers);
+
+        System.out.println("Second largest element: " + secondLargest);
+        System.out.println("Second smallest element: " + secondSmallest);
+    }
+
+    private static int findSecondLargest(List<Integer> numbers) {
+        List<Integer> sortedList = new ArrayList<>(numbers);
+        Collections.sort(sortedList);
+
+        return sortedList.get(sortedList.size() - 2);
+    }
+
+    private static int findSecondSmallest(List<Integer> numbers) {
+        List<Integer> sortedList = new ArrayList<>(numbers);
+        Collections.sort(sortedList);
+
+        return sortedList.get(1);
+    }
+}
+
